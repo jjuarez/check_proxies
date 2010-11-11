@@ -7,24 +7,30 @@ require 'uri'
 
 if( __FILE__ == $0 )
 
-  proxies_config_file = 'proxies.conf'
-  url_check           = 'http://www.infojobs.net/'
-  proxies_file_name   = File.join( File.dirname( __FILE__ ), '..', 'config', proxies_config_file )
+  url_check               = 'http://www.infojobs.net/'
+  valid_proxies_file_name = File.join( File.dirname( __FILE__ ), '..', 'var', 'data', 'valid_proxies.conf' )
+  proxies_file_name       = File.join( File.dirname( __FILE__ ), '..', 'config', 'proxies.conf' )
 
-  File.open( proxies_file_name ).each do |proxy|
+  File.open( valid_proxies_file_name, 'w' ) do |valid_proxies|
+    File.open( proxies_file_name ).each do |proxy|
 
-    proxy_uri = URI.parse( "http://#{proxy}" )
+      proxy_uri = URI.parse( "http://#{proxy}" )
 
-    $stderr.puts( "Host:#{proxy_uri.host} Port:#{proxy_uri.port}" )
+      $stderr.puts( proxy_uri )
 
-    begin
-      Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url_check ) do |http|
+      begin
+        Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url_check ) do |http|
 
-        $stderr.puts( "Checking..." )
-        $stderr.puts( "Proxy valido: #{proxy_uri}" ) if http.get == Net::HTTPSuccess
+          if http.get == Net::HTTPSuccess
+            
+            valid_proxies.write( proxy_uri )
+          else 
+            $stderr.puts( "Error con proxy: #{proxy_uri}" )            
+          end 
+        end
+      rescue => e
+        $stderr.puts( e.message )
       end
-    rescue => e
-      $stderr.puts( e.message )
     end
   end
 end
