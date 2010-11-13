@@ -1,17 +1,18 @@
 require 'uri'
 require 'net/http'
-require 'faster_csv'
 require 'singleton'
+require 'faster_csv'
 
 
 module CheckProxies
   class Cli
     include Singleton
     
-    PROXY_FILE = "ENV['HOME']/.proxy.conf"
+    PROXY_FILE = "#{ENV['HOME']}/.proxy.conf"
     
     private
     def check_url( proxy_uri, url )
+      
       Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url ) do |http|
         
         case http.get 
@@ -26,44 +27,42 @@ module CheckProxies
         end
       end
     rescue Exception => e
-      Logger::instance.error( e )                            
+      Logger::instance.log.error e.message                            
       return false 
     end
     
-    def save_proxy( proxy_uri )
-      File.open( PROXY_FILE, 'w' ) { |out| out.write( "export HTTP_PROXY='#{proxy_uri}'" ) }
+    def save_proxy( proxy )
+      
+      File.open( PROXY_FILE, 'w' ) { |out| out.write( "export HTTP_PROXY='#{proxy}'" ) }
     rescue Exception => e
-      Logger::instance.error( e )                            
+      Logger::instance.log.error e.message
     end
     
-    def get_uri( proxy_info )
+    def get_uri( proxy )
       URI.parse( "http://#{proxy}" )
     rescue Exception => e
-      Logger::instance.error( e )
+      Logger::instance.log.error e.message
     end
+    
     
     public
     def execute
    
       url     = Config::instance[:url]
-      proxies = FasterCSV.read( File.join( File.dirname( __FILE__ ), '..', Config::instance[:proxies_file] ) )
-      pindex  = 0
+      proxies = FasterCSV.read( File.join( ROOT_APP, Config::instance[:proxies_file] ) )
       
       proxies.each do |proxy|
 
-        proxy_uri = get_uri( proxy )
-        
-        Logger::instance.debug( "Checking proxy: #{proxy_uri}" )
-        
-        if check_url( proxy_uri, url )
-          Logger::instance.info( "URL: #{proxy_uri} ok" )
-          save_proxy( proxy_uri )
-          break
+        pu = get_uri( proxy )         
+        Logger::instance.log.debug( "Checking proxy: #{pu}" )
+
+        unless check_url( pu, url )
+          Logger::instance.log.debug( "URL: #{pu} error" )
         else
-          Logger::instance.debug( "URL: #{proxy_uri} error" )
+          Logger::instance.log.info( "URL: #{pu} ok" )
+          save_proxy( pu )
+          break
         end
-        
-        pindex+=1
       end
     end
   end

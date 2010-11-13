@@ -1,0 +1,16 @@
+GEM
+  remote: http://rubyforge.org/
+  remote: http://gemcutter.org/
+  remote: http://gems.github.com/
+  specs:
+    awesome_print (0.3.0)
+    choice (0.1.4)
+    fastercsv (1.5.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  awesome_print
+  choice
+  fastercsv

@@ -11,7 +11,7 @@ module CheckProxies
     end
     
     def []( key )
-      @config[key] 
-    end  
+      @config[key] unless @config.nil? 
+    end
   end
 end

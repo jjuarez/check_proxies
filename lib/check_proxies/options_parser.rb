@@ -12,12 +12,6 @@ Choice.options do
     default '../config/settings.yml'
   end 
   
-  option :url, :required=>true do
-    short '-u'
-    long  '--url=value'
-    desc  'The URL to check'
-  end
-
   separator ''
   separator '  Common options:'
 

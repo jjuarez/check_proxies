@@ -6,14 +6,13 @@ module CheckProxies
   class Logger
     include Singleton
     
-    DEFAULT_LOG_FILE = "../../log/check_proxies.log"
+    attr_reader :log
     
     def initialize( )
 
-      @log       = ::Logger.new( DEFAULT_LOG_FILE )
-      @log.level = ::Logger::DEBUG
-      
-      self
+      log_file_name = File.join( ROOT_APP, 'log', 'check_proxies.log' )
+      @log          = ::Logger.new( log_file_name )
+      @log.level    = ::Logger::DEBUG
     end
   end
 end
