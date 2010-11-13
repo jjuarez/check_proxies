@@ -7,7 +7,7 @@ module CheckProxies
     include Singleton
 
     def initialize()
-      @config = File.open( Choice.choices[:config] ) { YAML.load( f ) }
+      @config = File.open( Choice.choices[:config] ) { |file| YAML.load( file ) }
     end
     
     def []( key )

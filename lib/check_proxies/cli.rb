@@ -8,18 +8,30 @@ module CheckProxies
   class Cli
     include Singleton
     
-    DEFAULT_PROXY_FILE = "ENV['HOME']/.proxy.conf"
+    PROXY_FILE = "ENV['HOME']/.proxy.conf"
     
     private
     def check_url( proxy_uri, url )
-      Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url ) { |http| return http.get == Net::HTTPSuccess }
+      Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url ) do |http|
+        
+        case http.get 
+          when Net::HTTPSuccess:
+          when Net::HTTPRedirection: 
+          when Net::HTTPClientError: 
+          when Net::HTTPServerError: 
+          when Net::HTTPInformation:
+            return true 
+        else
+          return false
+        end
+      end
     rescue Exception => e
       Logger::instance.error( e )                            
       return false 
     end
     
     def save_proxy( proxy_uri )
-      File.open( DEFAULT_PROXY_FILE, 'w' ) { |out| out.write( "export HTTP_PROXY='#{proxy_uri}'" ) }
+      File.open( PROXY_FILE, 'w' ) { |out| out.write( "export HTTP_PROXY='#{proxy_uri}'" ) }
     rescue Exception => e
       Logger::instance.error( e )                            
     end

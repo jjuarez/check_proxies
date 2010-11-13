@@ -12,7 +12,7 @@ Choice.options do
     default '../config/settings.yml'
   end 
   
-  option :application do
+  option :url, :required=>true do
     short '-u'
     long  '--url=value'
     desc  'The URL to check'
