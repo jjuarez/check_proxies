@@ -1,36 +1,9 @@
 #!/usr/bin/env ruby
 
 
-require 'net/http'
-require 'uri'
+$:.unshift( File.join( File.dirname( __FILE__), '..', 'lib' ) )
+require 'rubygems'
+require 'check_proxies'
 
 
-if( __FILE__ == $0 )
-
-  url_check               = 'http://www.infojobs.net/'
-  valid_proxies_file_name = File.join( File.dirname( __FILE__ ), '..', 'var', 'data', 'valid_proxies.conf' )
-  proxies_file_name       = File.join( File.dirname( __FILE__ ), '..', 'config', 'proxies.conf' )
-
-  File.open( valid_proxies_file_name, 'w' ) do |valid_proxies|
-    File.open( proxies_file_name ).each do |proxy|
-
-      proxy_uri = URI.parse( "http://#{proxy}" )
-
-      $stderr.puts( proxy_uri )
-
-      begin
-        Net::HTTP::Proxy( proxy_uri.host, proxy_uri.port ).start( url_check ) do |http|
-
-          if http.get == Net::HTTPSuccess
-            
-            valid_proxies.write( proxy_uri )
-          else 
-            $stderr.puts( "Error con proxy: #{proxy_uri}" )            
-          end 
-        end
-      rescue => e
-        $stderr.puts( e.message )
-      end
-    end
-  end
-end
+CheckProxies::Cli::instance.execute if( __FILE__ == $0 )
