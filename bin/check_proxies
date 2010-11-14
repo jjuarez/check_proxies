@@ -1,16 +1,14 @@
 #!/usr/bin/env ruby
 
-
-$:.unshift( File.join( File.dirname( __FILE__), '..', 'lib' ) )
-
-
-require 'rubygems'
-require 'bundler/setup'
+$:.unshift( File.join( File.dirname( __FILE__), *%w[.. lib] ) )
 require 'check_proxies'
 
-
-if( __FILE__ == $0 )
-
-  ROOT_APP = File.join( File.dirname( __FILE__ ), '..' )  
-  CheckProxies::Cli::instance.execute
+module App
+  ROOT = File.join( File.dirname( __FILE__ ), '..' )
+  
+  def self.run( )
+    CheckProxies::Cli::instance.execute( File.join( ROOT, CheckProxies::Config::instance[:proxies_file] ), CheckProxies::Config::instance[:url] )
+  end   
 end
+
+App::run

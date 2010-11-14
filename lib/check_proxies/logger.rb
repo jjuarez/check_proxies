@@ -1,18 +1,34 @@
-require 'logger'
-require 'singleton'
-
-
 module CheckProxies
   class Logger
     include Singleton
     
-    attr_reader :log
+    def self.log_dir
+    end
     
     def initialize( )
+      
+      ldn = File.join( App::ROOT, 'log' )
 
-      log_file_name = File.join( ROOT_APP, 'log', 'check_proxies.log' )
-      @log          = ::Logger.new( log_file_name )
-      @log.level    = ::Logger::DEBUG
+      FileUtils.mkdir( ldn ) unless File.exist?( ldn )
+
+      @log       = ::Logger.new( File.join( ldn, 'check_proxies.log' ) )
+      @log.level = ::Logger::DEBUG
+    end
+    
+    def error( message )
+      @log.error( message )
+    end
+    
+    def warn( message )
+      @log.warn( message )
+    end
+    
+    def info( message )
+      @log.info( message )
+    end
+    
+    def debug( message )
+      @log.debug( message )
     end
   end
 end
