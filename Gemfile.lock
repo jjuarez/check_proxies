@@ -1,11 +1,24 @@
 GEM
-  remote: http://rubyforge.org/
+  remote: http://gems.rubyforge.org/
   remote: http://gemcutter.org/
   remote: http://gems.github.com/
   specs:
-    awesome_print (0.3.0)
+    activesupport (3.0.1)
+    awesome_print (0.3.1)
     choice (0.1.4)
     fastercsv (1.5.3)
+    i18n (0.4.2)
+    mail (2.2.9)
+      activesupport (>= 2.3.6)
+      i18n (~> 0.4.1)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.16)
+    polyglot (0.3.1)
+    pony (1.1)
+      mail (> 2.0)
+    treetop (1.4.8)
+      polyglot (>= 0.3.1)
 
 PLATFORMS
   ruby
@@ -14,3 +27,4 @@ DEPENDENCIES
   awesome_print
   choice
   fastercsv
+  pony
