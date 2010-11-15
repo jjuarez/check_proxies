@@ -3,7 +3,7 @@ module CheckProxies
     
     def check
       Logger::instance.debug( "Checking: #{@proxy_uri} -> #{@url}..." )
-      Net::HTTP::Proxy( @proxy_uri.host, @proxy_uri.port ).start( @url ) { |http| ( http.request( @request ) == Net::HTTPSuccess ) }
+      Net::HTTP::Proxy( @proxy_uri.host, @proxy_uri.port ).start( @url ) { |http| return true if http.request( @request ) == Net::HTTPSuccess }
     rescue => e
       Logger::instance.error e.message                            
       false 
