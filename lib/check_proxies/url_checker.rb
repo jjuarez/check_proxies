@@ -3,16 +3,16 @@ module CheckProxies
     
     def check
       Logger::instance.debug( "Checking: #{@proxy_uri} -> #{@url}..." )
-      Net::HTTP::Proxy( @proxy_uri.host, @proxy_uri.port ).start( @url ) { |http| ( http.get == Net::HTTPSucess ) }
+      Net::HTTP::Proxy( @proxy_uri.host, @proxy_uri.port ).start( @url ) { |http| ( http.request( @request ) == Net::HTTPSucess ) }
     rescue => e
       Logger::instance.error e.message                            
       false 
     end
     
-    def initialize( proxy, url )
-      
-      @proxy_uri = ( proxy =~ /^http:\/\// ) ? URI.parse( proxy ) : URI.parse( "http://#{proxy}" )
-      @url       = url
+    def initialize( proxy, url )      
+      @proxy_uri = URI.parse( proxy )
+      @url       = URI.parse( url )
+      @request   = Net::HTTP::Get.new( @url.path )
     rescue URI::InvalidURIError => e
       Logger::instance.error e.message
     end

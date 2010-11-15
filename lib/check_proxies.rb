@@ -23,4 +23,4 @@ $:.unshift( File.dirname( __FILE__ ))
   url_checker
   mailer
   cli
-].each { |file| require "check_proxies/#{file}" }
+].each { |lib| require "check_proxies/#{lib}" }
