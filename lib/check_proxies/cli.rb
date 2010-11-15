@@ -4,6 +4,12 @@ module CheckProxies
     
     DEFAULT_PROXY_CONFIG_FILE = "#{ENV['HOME']}/.proxy.conf"
     
+    def save_proxy_configuration()
+      File.open( File.join( ENV['HOME'], Config::instance[:proxy_config_file] ), 'w' ) { |out| out.write( "#{proxy}" ) }
+    rescue Exception => e
+      Logger::instance.error e.message
+    end
+    
     def execute( proxies_file, url )
    
       FasterCSV.read( proxies_file ).each do |proxy|
@@ -12,11 +18,11 @@ module CheckProxies
           Logger::instance.error( "URL: #{proxy} error" )
         else
           Logger::instance.info( "URL: #{proxy} ok" )
-          File.open( DEFAULT_PROXY_CONFIG_FILE, 'w' ) { |out| out.write( "export HTTP_PROXY=#{proxy}" ) }
+          save_proxy_configuration
           break
         end
       end    
-    rescue => e
+    rescue Exception => e
       Logger::instance.error e.message          
     end
   end
