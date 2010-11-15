@@ -10,7 +10,7 @@ module CheckProxies
     end
     
     def initialize( proxy, url )      
-      @proxy_uri = URI.parse( proxy )
+      @proxy_uri = URI.parse( proxy =~ /^http:\/\// ? proxy : "http://#{proxy}"  )
       @url       = URI.parse( url )
       @request   = Net::HTTP::Get.new( @url.path )
     rescue URI::InvalidURIError => e
