@@ -2,9 +2,6 @@ module CheckProxies
   class Logger
     include Singleton
     
-    def self.log_dir
-    end
-    
     def initialize( )
       
       ldn = File.join( App::ROOT, 'log' )

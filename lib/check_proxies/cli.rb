@@ -14,12 +14,13 @@ module CheckProxies
    
       FasterCSV.read( proxies_file ).each do |proxy|
         
-        unless URLChecker.new( proxy, url ).check
-          Logger::instance.error( "URL: #{proxy} error" )
-        else
+        if URLChecker.new( proxy, url ).check == Net::HTTPSuccess )
           Logger::instance.info( "URL: #{proxy} ok" )
           save_proxy_configuration
+
           break
+        else
+          Logger::instance.error( "URL: #{proxy} error" )
         end
       end    
     rescue Exception => e
