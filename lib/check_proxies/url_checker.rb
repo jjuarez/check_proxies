@@ -6,8 +6,8 @@ module CheckProxies
       
       Net::HTTP::Proxy( @proxy_uri.host, @proxy_uri.port ).start( @url.host, @url.port ) do |http|
           
-        // http.request( @request ) == Net::HTTPSuccess }
         return http.request( @request )
+      end
     rescue Exception => e
       Logger::instance.error e.message                            
       false 
