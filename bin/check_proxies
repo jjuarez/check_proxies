@@ -3,12 +3,20 @@
 $:.unshift( File.join( File.dirname( __FILE__), *%w[.. lib] ) )
 require 'check_proxies'
 
+
 module App
+  
   ROOT = File.join( File.dirname( __FILE__ ), '..' )
+  NAME = 'check_proxies'
   
   def self.run( )
-    CheckProxies::Cli::instance.execute( File.join( ROOT, CheckProxies::Config::instance[:proxies_file] ), CheckProxies::Config::instance[:url] )
+    
+    proxies_file = File.join( ROOT, CheckProxies::Config.instance[:proxies_file] )
+    
+    CheckProxies::Cli::instance.run( proxies_file, CheckProxies::Config.instance[:url] )
   end   
 end
 
+##
+# :: Main ::
 App::run

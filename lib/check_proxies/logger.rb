@@ -1,17 +1,19 @@
+require 'logger'
+
+
 module CheckProxies
   class Logger
     include Singleton
     
     def initialize( )
-      
-      ldn = File.join( App::ROOT, 'log' )
-
-      FileUtils.mkdir( ldn ) unless File.exist?( ldn )
-
-      @log       = ::Logger.new( File.join( ldn, 'check_proxies.log' ) )
+      @log       = ::Logger.new( File.join( App::ROOT, 'log', "#{App::NAME}.log" ) )
       @log.level = ::Logger::DEBUG
     end
     
+    def fatal( message )
+      @log.error( message )
+    end
+
     def error( message )
       @log.error( message )
     end

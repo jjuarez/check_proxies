@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+if( __FILE__ == $0 && ARGV[0] )
+
+  proxy_list = []
+   
+  File.open( File.join( '..', 'config', ARGV[0] ), 'r' ).each do |line| 
+    
+    clean_line = line.strip.chomp
+    proxy_info = Hash.new
+    
+    proxy_info[:checked] = false
+    proxy_info[:url]     = clean_line =~/^(http:\/\/|https:\/\/)/ ? clean_line : "http://#{clean_line}"
+
+    proxy_list << proxy_info
+  end
+  
+  $stdout.puts proxy_list.to_yaml
+end

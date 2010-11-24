@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'choice'
+
+
 Choice.options do
   header ''
   header '  Specific options:'
